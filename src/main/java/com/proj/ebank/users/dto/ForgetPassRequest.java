@@ -7,17 +7,12 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class PassResetRequest {
+public class ForgetPassRequest {
+    @NotBlank
     private String email;
-    @NotBlank
-    private String code;
-    @NotBlank
-    private String newPass;
-
 }

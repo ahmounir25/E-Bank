@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background-color: #f4f4f4; margin: 0; padding: 0; }
+        .wrapper { width: 100%; padding: 20px; }
+        .container { max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 8px; overflow: hidden; border: 1px solid #e0e0e0; }
+        .header { background-color: #1a237e; color: #ffffff; padding: 25px; text-align: center; }
+        .content { padding: 40px; color: #333333; line-height: 1.6; }
+        .success-icon { text-align: center; font-size: 48px; color: #2e7d32; margin-bottom: 20px; }
+        .alert-box { background-color: #fff3e0; border-left: 5px solid #ff9800; padding: 15px; margin-top: 25px; font-size: 14px; }
+        .footer { background-color: #f9f9f9; padding: 20px; text-align: center; font-size: 12px; color: #888888; }
+        .btn-support { display: inline-block; margin-top: 15px; color: #1a237e; font-weight: bold; text-decoration: none; }
+    </style>
+</head>
+<body>
+<div class="wrapper">
+    <div class="container">
+        <div class="header">
+            <h2>E-Bank Security</h2>
+        </div>
+
+        <div class="content">
+            <div class="success-icon">✔</div>
+            <h3>Password Changed Successfully</h3>
+
+            <p>Dear <strong th:text="${name}">User</strong>,</p>
+
+            <p>This is a confirmation that the password for your E-Bank digital account was recently changed. You can now use your new password to log in.</p>
+
+            <div class="alert-box">
+                <strong>Didn't make this change?</strong><br>
+                If you did not change your password, your account may have been compromised. Please Change Your Password Immediately
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>&copy; 2026 E-Bank Digital Services</p>
+            <p>Please do not reply to this automated security notification.</p>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -40,7 +40,6 @@ public class NotificationServiceImpl implements NotificationService {
             mimeMessageHelper.setSubject(notificationDTO.getSubject());
 
             if (notificationDTO.getTemplateName() != null) {
-
                 Context context = new Context();
                 context.setVariables(notificationDTO.getTemplateVariables());
                 String htmlContent = templateEngine.process(notificationDTO.getTemplateName(), context);
@@ -63,6 +62,7 @@ public class NotificationServiceImpl implements NotificationService {
                     .type(NotificationType.EMAIL)
                     .createdAt(LocalDateTime.now())
                     .build();
+
             notificationRepo.save(notification);
 
         } catch (MessagingException e) {

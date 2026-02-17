@@ -27,8 +27,8 @@ public class PassResetCode {
     @JoinColumn(nullable = false,name = "user_id")
     private User user;
 
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
+    @Column(name = "expiry_date")
+    private LocalDateTime expiryDate;
 
     @Column(name = "used")
     private boolean used;

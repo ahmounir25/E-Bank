@@ -1,5 +1,7 @@
 package com.proj.ebank.users.service;
 
+import com.proj.ebank.account.entity.Account;
+import com.proj.ebank.account.service.AccountService;
 import com.proj.ebank.enums.AccountType;
 import com.proj.ebank.enums.Currency;
 import com.proj.ebank.enums.NotificationType;
@@ -38,6 +40,7 @@ public class AuthServiceImpl implements AuthService {
     private final UserRepo userRepo;
     private final RoleRepo roleRepo;
     private final PasswordEncoder passwordEncoder;
+    private final AccountService accountService;
     private final TokenService tokenService;
     private final NotificationService notificationService;
     private final CodeGenerator codeGenerator;
@@ -82,7 +85,7 @@ public class AuthServiceImpl implements AuthService {
 
         // TODO:: AUTO GENERATE AN ACCOUNT
 
-//        Account savedAccount = accountService.createAccount(AccountType.SAVING,savedUser);
+        Account savedAccount = accountService.createAccount(AccountType.SAVING,savedUser);
 
         // Send welcome email
 
@@ -101,11 +104,11 @@ public class AuthServiceImpl implements AuthService {
         // Send Account Details email
 
         Map<String,Object>accountVars=new HashMap<>();
-        vars.put("fname",savedUser.getFirstName());
-        vars.put("lname",savedUser.getLastName());
-//        vars.put("accountNumber",savedAccount.getAccountNumber());
-        vars.put("type", AccountType.SAVING.name());
-        vars.put("currency", Currency.EGP.name());
+        accountVars.put("fname",savedUser.getFirstName());
+        accountVars.put("lname",savedUser.getLastName());
+        accountVars.put("accountNumber",savedAccount.getAccountNumber());
+        accountVars.put("type", AccountType.SAVING.name());
+        accountVars.put("currency", Currency.EGP.name());
 
         NotificationDTO accountCreationEmail= NotificationDTO.builder()
                 .type(NotificationType.EMAIL)
@@ -122,8 +125,8 @@ public class AuthServiceImpl implements AuthService {
         return Response.<String>builder()
                 .StatusCode(HttpStatus.CREATED.value())
                 .message("User Register Successfully")
-//                .data("Email of your account Details has been sent to you. Your Account Number is: "
-//                        +savedAccount.getAccountNumber())
+                .data("Email of your account Details has been sent to you. Your Account Number is: "
+                        +savedAccount.getAccountNumber())
                 .build();
     }
 

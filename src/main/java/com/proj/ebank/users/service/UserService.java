@@ -1,23 +1,24 @@
 package com.proj.ebank.users.service;
 
-
 import com.proj.ebank.response.Response;
-import com.proj.ebank.users.dto.LoginRequest;
-import com.proj.ebank.users.dto.LoginResponse;
-import com.proj.ebank.users.dto.PassResetRequest;
-import com.proj.ebank.users.dto.RegisterRequest;
-import com.proj.ebank.users.entity.PassResetCode;
+import com.proj.ebank.users.dto.PassUpdateRequest;
+import com.proj.ebank.users.dto.UserDTO;
 import com.proj.ebank.users.entity.User;
+import org.springframework.data.domain.Page;
+import org.springframework.web.multipart.MultipartFile;
 
 public interface UserService {
+    User getCurrentLoggedInUser();
 
-    Response<String> register(RegisterRequest request);
+    Response<UserDTO> getMyProfile();
 
-    Response<LoginResponse> login(LoginRequest request);
+    Response<Page<UserDTO>> getAllUsers(int page,int quantity);
 
-    Response<?> forgetPassword(String email);
+    Response<?> updatePassword(PassUpdateRequest passUpdateRequest);
 
-    Response<?>updatePasswordViaResetCode(PassResetRequest passResetRequest);
+    Response<?> uploadProfilePic(MultipartFile file);
+
+
 
 
 }

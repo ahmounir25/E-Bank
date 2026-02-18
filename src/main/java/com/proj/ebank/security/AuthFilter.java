@@ -36,6 +36,7 @@ public class AuthFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain filterChain)
             throws ServletException, IOException {
+
         String token = getTokenFromRequest(request);
         if (token != null) {
             String email;

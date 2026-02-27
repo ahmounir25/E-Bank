@@ -12,6 +12,11 @@ public interface TransactionService {
 
     Response<List<TransactionDTO>> getTransactionsForAccount(String accountNum, int page, int size);
 
+    Response<List<TransactionDTO>> getAllTransactions(int page, int size);
+
+
+
+
 
 
 }

@@ -7,6 +7,7 @@ import com.proj.ebank.transactions.service.TransactionService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -30,9 +31,18 @@ public class TransactionController {
             @PathVariable String accountNum
             , @RequestParam(defaultValue = "0") int page
             , @RequestParam(defaultValue = "4") int size) {
-
         return ResponseEntity.ok(transactionService.getTransactionsForAccount(accountNum, page, size));
     }
+
+    @GetMapping("/all")
+    @PreAuthorize("hasAnyAuthority('ADMIN','AUDITOR')")
+    public ResponseEntity<Response<?>> getAllTransactions(
+            @RequestParam(defaultValue = "0") int page
+            , @RequestParam(defaultValue = "4") int size) {
+        return ResponseEntity.ok(transactionService.getAllTransactions(page, size));
+    }
+
+
 
 
 }

@@ -28,6 +28,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.awt.print.PageFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
@@ -83,8 +84,13 @@ public class TransactionServiceImpl implements TransactionService {
         Account account = accountRepo.findByAccountNumber(accountNum)
                 .orElseThrow(() -> new NotFoundException("account not found"));
 
-        if (!account.getUser().getId().equals(user.getId())) {
-            throw new BadRequestException("Account doesn't belong to authenticated user");
+        boolean isStaff = user.getRoles()
+                .stream()
+                .anyMatch(role -> role.getName().equals("ADMIN") ||
+                        role.getName().equals("AUDITOR"));
+
+        if (!account.getUser().getId().equals(user.getId()) && !isStaff) {
+            throw new BadRequestException("Don't have a permission to see transactions");
         }
 
         Pageable pageable = PageRequest.of(page, size, Sort.by("transactionDate").descending());
@@ -109,10 +115,42 @@ public class TransactionServiceImpl implements TransactionService {
                 .build();
     }
 
+    @Override
+    public Response<List<TransactionDTO>> getAllTransactions(int page, int size) {
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by("transactionDate").descending());
+        Page<Transaction> transactionsPage = transactionRepo.findAll(pageable);
+
+        List<TransactionDTO> transactionList = transactionsPage
+                .getContent()
+                .stream()
+                .map(transaction -> modelMapper.map(transaction, TransactionDTO.class))
+                .toList();
+
+        return Response
+                .<List<TransactionDTO>>builder()
+                .data(transactionList)
+                .metaData(Map.of(
+                        "currentPage", transactionsPage.getNumber(),
+                        "pageSize", transactionsPage.getSize(),
+                        "totalPages", transactionsPage.getTotalPages(),
+                        "totalItems", transactionsPage.getTotalElements()
+                ))
+                .StatusCode(200)
+                .message("All transactions have been retrieved")
+                .build();
+    }
+
 
     private void handleWithDraw(TransactionRequest transactionRequest, Transaction transaction) {
         Account account = accountRepo.findByAccountNumber(transactionRequest.getAccountNumber())
                 .orElseThrow(() -> new NotFoundException("Account Not Found"));
+
+        User currentUser = userService.getCurrentLoggedInUser();
+
+        if (!account.getUser().getId().equals(currentUser.getId())) {
+            throw new BadRequestException("Account doesn't belong to authenticated user");
+        }
 
         if (account.getBalance().compareTo(transactionRequest.getAmount()) < 0) {
             throw new InsufficientBalanceException("Insufficient Balance");
@@ -126,19 +164,25 @@ public class TransactionServiceImpl implements TransactionService {
         Account account = accountRepo.findByAccountNumber(transactionRequest.getAccountNumber())
                 .orElseThrow(() -> new NotFoundException("Account Not Found"));
 
+        User currentUser = userService.getCurrentLoggedInUser();
+        if (!account.getUser().getId().equals(currentUser.getId())) {
+            throw new BadRequestException("Account doesn't belong to authenticated user");
+        }
+
         account.setBalance(account.getBalance().add(transactionRequest.getAmount()));
         transaction.setAccount(account);
         accountRepo.save(account);
     }
 
     private void handleTransfer(TransactionRequest transactionRequest, Transaction transaction) {
-        User currentUser=userService.getCurrentLoggedInUser();
+        User currentUser = userService.getCurrentLoggedInUser();
         Account sourceAccount = accountRepo.findByAccountNumber(transactionRequest.getAccountNumber())
                 .orElseThrow(() -> new NotFoundException("account not found"));
         Account destinationAccount = accountRepo.findByAccountNumber(transactionRequest.getDestinationAccountNumber())
                 .orElseThrow(() -> new NotFoundException("receiver account not found"));
 
-        if (!sourceAccount.getUser().getId().equals(currentUser.getId())){
+
+        if (!sourceAccount.getUser().getId().equals(currentUser.getId())) {
             throw new BadRequestException("Account doesn't belong to authenticated user");
         }
 
@@ -147,10 +191,10 @@ public class TransactionServiceImpl implements TransactionService {
         }
 
         sourceAccount.setBalance(sourceAccount.getBalance().subtract(transactionRequest.getAmount()));
-        Account savedSourceAccount=accountRepo.save(sourceAccount);
+        Account savedSourceAccount = accountRepo.save(sourceAccount);
 
         destinationAccount.setBalance(destinationAccount.getBalance().add(transactionRequest.getAmount()));
-        Account savedDestAccount= accountRepo.save(destinationAccount);
+        Account savedDestAccount = accountRepo.save(destinationAccount);
 
         transaction.setAccount(savedSourceAccount);
         transaction.setSourceAccount(savedSourceAccount.getAccountNumber());
@@ -185,8 +229,7 @@ public class TransactionServiceImpl implements TransactionService {
                     .createdAt(LocalDateTime.now())
                     .build();
             notificationService.sendEmail(transactionMail, user);
-        }
-        else if (savedTransaction.getTransactionType() == TransactionType.WITHDRAW) {
+        } else if (savedTransaction.getTransactionType() == TransactionType.WITHDRAW) {
             subject = "Debit Alert";
             templateName = "withdraw";
             NotificationDTO transactionMail = NotificationDTO.builder()
@@ -198,8 +241,7 @@ public class TransactionServiceImpl implements TransactionService {
                     .createdAt(LocalDateTime.now())
                     .build();
             notificationService.sendEmail(transactionMail, user);
-        }
-        else if (savedTransaction.getTransactionType() == TransactionType.TRANSFER) {
+        } else if (savedTransaction.getTransactionType() == TransactionType.TRANSFER) {
             subject = "Debit Alert";
             templateName = "withdraw";
 

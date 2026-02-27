@@ -12,4 +12,6 @@ public interface TransactionRepo extends JpaRepository<Transaction, Long> {
     Page<Transaction> findByAccount_AccountNumber(String accountNumber, Pageable pageable);
 
     List<Transaction> findByAccount_AccountNumber(String accountNumber);
+
+    Page<Transaction> findAll(Pageable pageable);
 }

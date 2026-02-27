@@ -42,9 +42,9 @@ public class Transaction {
     @JoinColumn(name = "account_id", nullable = false)
     private Account account;
 
-    @Column(name = "source_account", nullable = false)
+    @Column(name = "source_account", nullable = true)
     private String sourceAccount;
-    @Column(name = "destination_account", nullable = false)
+    @Column(name = "destination_account",nullable = true)
     private String destinationAccount;
 
 

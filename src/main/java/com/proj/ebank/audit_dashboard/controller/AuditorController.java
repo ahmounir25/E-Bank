@@ -19,7 +19,7 @@ import java.util.Optional;
 @RequestMapping("/api/audit")
 @RestController
 @RequiredArgsConstructor
-@PreAuthorize("hasAuthority('AUDITOR') or hasAuthority('ADMIN')")
+@PreAuthorize("hasAnyAuthority('AUDITOR','ADMIN')")
 public class AuditorController {
     private final AuditorService auditorService;
 

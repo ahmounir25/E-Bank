@@ -39,7 +39,13 @@ public class UserServiceImpl implements UserService {
     private final ModelMapper modelMapper;
 
     //todo:: change to aws when deploying
-    private final String uploadDir = "uploads/profilePic/";
+
+    // for backend
+//    private final String uploadDir = "uploads/profilePic";
+
+
+    // for frontend
+    private final String uploadDir = "E:\\dev-spring-boot\\ebank-react\\ebank-react\\public\\profile-picture\\";
 
     @Override
     public User getCurrentLoggedInUser() {
@@ -150,10 +156,14 @@ public class UserServiceImpl implements UserService {
             String newFileName = UUID.randomUUID() + fileExtension;
 
             Path filePath = dirPath.resolve(newFileName);
-            Files.copy(file.getInputStream(),filePath);
+            Files.copy(file.getInputStream(), filePath);
 
+            // for backend
+//            String fileUrl=uploadDir+newFileName;
 
-            String fileUrl=uploadDir+newFileName;
+            // for frontend
+            String fileUrl = "profile-picture/"+newFileName;
+
             myUser.setProfilePicUrl(fileUrl);
             myUser.setUpdatedAt(LocalDateTime.now());
 

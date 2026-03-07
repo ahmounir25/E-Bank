@@ -20,7 +20,9 @@ import java.util.Optional;
 @RestController
 @RequiredArgsConstructor
 @PreAuthorize("hasAnyAuthority('AUDITOR','ADMIN')")
+
 public class AuditorController {
+
     private final AuditorService auditorService;
 
     @GetMapping("/totals")

@@ -42,8 +42,13 @@ public class UserController {
     @PutMapping("/profile-picture")
     public ResponseEntity<Response<?>>uploadProfilePic(@RequestParam("file")MultipartFile file){
 
-        return ResponseEntity.ok(userService.uploadProfilePic(file));
+        return ResponseEntity.ok(userService.uploadProfilePicToS3(file));
     }
 
+    @DeleteMapping("/profile-picture")
+    public ResponseEntity<Response<?>>deleteProfilePic(@RequestParam("url")String url){
+
+        return ResponseEntity.ok(userService.deleteProfilePicFromS3(url));
+    }
 
 }

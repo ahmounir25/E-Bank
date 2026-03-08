@@ -1,5 +1,6 @@
 package com.proj.ebank.users.service;
 
+import com.proj.ebank.aws.S3Service;
 import com.proj.ebank.exceptions.BadRequestException;
 import com.proj.ebank.exceptions.NotFoundException;
 import com.proj.ebank.notification.dto.NotificationDTO;
@@ -37,6 +38,7 @@ public class UserServiceImpl implements UserService {
     private final NotificationService notificationService;
     private final PasswordEncoder passwordEncoder;
     private final ModelMapper modelMapper;
+    private final S3Service s3Service;
 
     //todo:: change to aws when deploying
 
@@ -162,7 +164,7 @@ public class UserServiceImpl implements UserService {
 //            String fileUrl=uploadDir+newFileName;
 
             // for frontend
-            String fileUrl = "profile-picture/"+newFileName;
+            String fileUrl = "profile-picture/" + newFileName;
 
             myUser.setProfilePicUrl(fileUrl);
             myUser.setUpdatedAt(LocalDateTime.now());
@@ -178,6 +180,45 @@ public class UserServiceImpl implements UserService {
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage());
         }
+
+    }
+
+    @Override
+    public Response<?> uploadProfilePicToS3(MultipartFile file) {
+
+        User myUser = getCurrentLoggedInUser();
+        try {
+
+            if (!myUser.getProfilePicUrl().isEmpty() && myUser.getProfilePicUrl() != null) {
+                s3Service.deleteFile(myUser.getProfilePicUrl());
+            }
+            String s3Url = s3Service.uploadFile(file,"profile-pictures");
+            myUser.setProfilePicUrl(s3Url);
+            userRepo.save(myUser);
+
+            return Response.builder()
+                    .StatusCode(HttpStatus.OK.value())
+                    .message("Profile Picture Uploaded Successfully")
+                    .data(s3Url)
+                    .build();
+
+        } catch (IOException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    @Override
+    public Response<?> deleteProfilePicFromS3(String url) {
+
+             User myUser = getCurrentLoggedInUser();
+            if (!myUser.getProfilePicUrl().isEmpty() && myUser.getProfilePicUrl() != null) {
+                s3Service.deleteFile(myUser.getProfilePicUrl());
+            }
+            return Response.builder()
+                    .StatusCode(HttpStatus.OK.value())
+                    .message("Profile Picture Uploaded Successfully")
+                    .build();
+
 
     }
 }

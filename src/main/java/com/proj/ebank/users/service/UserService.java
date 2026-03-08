@@ -12,13 +12,14 @@ public interface UserService {
 
     Response<UserDTO> getMyProfile();
 
-    Response<Page<UserDTO>> getAllUsers(int page,int quantity);
+    Response<Page<UserDTO>> getAllUsers(int page, int quantity);
 
     Response<?> updatePassword(PassUpdateRequest passUpdateRequest);
 
     Response<?> uploadProfilePic(MultipartFile file);
 
+    Response<?> uploadProfilePicToS3(MultipartFile file);
 
-
+    Response<?> deleteProfilePicFromS3(String url);
 
 }

@@ -40,7 +40,6 @@ public class UserServiceImpl implements UserService {
     private final ModelMapper modelMapper;
     private final S3Service s3Service;
 
-    //todo:: change to aws when deploying
 
     // for backend
 //    private final String uploadDir = "uploads/profilePic";
@@ -213,6 +212,8 @@ public class UserServiceImpl implements UserService {
              User myUser = getCurrentLoggedInUser();
             if (!myUser.getProfilePicUrl().isEmpty() && myUser.getProfilePicUrl() != null) {
                 s3Service.deleteFile(myUser.getProfilePicUrl());
+                myUser.setProfilePicUrl("");
+                userRepo.save(myUser);
             }
             return Response.builder()
                     .StatusCode(HttpStatus.OK.value())

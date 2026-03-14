@@ -21,18 +21,4 @@ public class EbankApplication {
         SpringApplication.run(EbankApplication.class, args);
     }
 
-//    @Bean
-//    CommandLineRunner commandLineRunner(){
-//        return args -> {
-//            NotificationDTO notificationDTO=NotificationDTO.builder()
-//                    .recipient("amounir075@gmail.com")
-//                    .subject("Hello test 3")
-//                    .body("<h2>Dear me,</h2> this is a test <b>email<b> 😘😘")
-//                    .type(NotificationType.EMAIL)
-//                .build();
-//            notificationService.sendEmail(notificationDTO,new User());
-//        };
-//
-//    }
-
 }

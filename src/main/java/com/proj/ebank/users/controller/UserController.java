@@ -34,7 +34,7 @@ public class UserController {
         return ResponseEntity.ok(userService.getMyProfile());
     }
 
-    @PutMapping("/update-pass")
+    @PutMapping("/update-password")
     public ResponseEntity<Response<?>> updatePass(@RequestBody @Valid PassUpdateRequest passUpdateRequest){
         return ResponseEntity.ok(userService.updatePassword(passUpdateRequest));
     }

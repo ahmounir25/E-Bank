@@ -30,13 +30,13 @@ public class AuthController {
     }
 
 
-    @PostMapping("/forget-pass")
+    @PostMapping("/forget-password")
     public ResponseEntity<Response<?>> forgetPass(@RequestBody @Valid ForgetPassRequest request){
         return ResponseEntity.ok(authService.forgetPassword(request.getEmail()));
     }
 
 
-    @PostMapping("/reset-pass")
+    @PostMapping("/reset-password")
     public ResponseEntity<Response<?>> updatePass(@RequestBody @Valid PassResetRequest request){
         return ResponseEntity.ok(authService.updatePasswordViaResetCode(request));
     }

@@ -102,7 +102,7 @@ public class UserServiceImpl implements UserService {
         }
 
         if (!passwordEncoder.matches(oldPass, myUser.getPassword())) {
-            throw new BadRequestException("Old Password is not Correct");
+            throw new BadRequestException("Old Password is Not Correct");
         }
 
         myUser.setPassword(passwordEncoder.encode(newPass));

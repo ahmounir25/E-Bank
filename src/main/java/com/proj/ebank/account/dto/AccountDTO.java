@@ -35,9 +35,9 @@ public class AccountDTO {
 
     private BigDecimal balance = BigDecimal.ZERO;
 
-    private AccountType accountType ;
+    private AccountType accountType;
 
-    private AccountStatus accountStatus ;
+    private AccountStatus accountStatus;
 
     private Currency currency;
 
@@ -47,7 +47,7 @@ public class AccountDTO {
     @JsonManagedReference // to avoid recursion loop by ignoring accountDTO that is inside TransactionDTO
     private List<TransactionDTO> transactions;
 
-    private LocalDateTime createdAt=LocalDateTime.now();
+    private LocalDateTime createdAt = LocalDateTime.now();
 
     private LocalDateTime closedAt;
 

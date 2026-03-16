@@ -82,7 +82,7 @@ public class TransactionServiceImpl implements TransactionService {
         User user = userService.getCurrentLoggedInUser();
 
         Account account = accountRepo.findByAccountNumber(accountNum)
-                .orElseThrow(() -> new NotFoundException("account not found"));
+                .orElseThrow(() -> new NotFoundException("Account Not Found"));
 
         boolean isStaff = user.getRoles()
                 .stream()

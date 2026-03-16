@@ -183,7 +183,7 @@ public class AuthServiceImpl implements AuthService {
         NotificationDTO forgetPassMail = NotificationDTO.builder()
                 .recipient(myUser.getEmail())
                 .subject("Password Reset Code")
-                .templateName("PassReset")
+                .templateName("passReset")
                 .templateVariables(vars)
                 .build();
 

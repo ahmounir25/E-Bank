@@ -188,7 +188,7 @@ public class UserServiceImpl implements UserService {
         User myUser = getCurrentLoggedInUser();
         try {
 
-            if (!myUser.getProfilePicUrl().isEmpty() && myUser.getProfilePicUrl() != null) {
+            if (myUser.getProfilePicUrl() != null && !myUser.getProfilePicUrl().isEmpty()) {
                 s3Service.deleteFile(myUser.getProfilePicUrl());
             }
             String s3Url = s3Service.uploadFile(file,"profile-pictures");
@@ -210,7 +210,7 @@ public class UserServiceImpl implements UserService {
     public Response<?> deleteProfilePicFromS3(String url) {
 
              User myUser = getCurrentLoggedInUser();
-            if (!myUser.getProfilePicUrl().isEmpty() && myUser.getProfilePicUrl() != null) {
+            if (myUser.getProfilePicUrl() != null && !myUser.getProfilePicUrl().isEmpty()) {
                 s3Service.deleteFile(myUser.getProfilePicUrl());
                 myUser.setProfilePicUrl("");
                 userRepo.save(myUser);

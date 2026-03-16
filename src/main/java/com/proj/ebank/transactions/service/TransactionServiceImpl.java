@@ -183,7 +183,7 @@ public class TransactionServiceImpl implements TransactionService {
 
 
         if (!sourceAccount.getUser().getId().equals(currentUser.getId())) {
-            throw new BadRequestException("Account doesn't belong to authenticated user");
+            throw new BadRequestException("account doesn't belong to authenticated user");
         }
 
         if (sourceAccount.getBalance().compareTo(transactionRequest.getAmount()) < 0) {

@@ -40,5 +40,4 @@ public class NotificationDTO {
 
     private Map<String,Object> templateVariables;
 
-
 }

@@ -163,9 +163,13 @@ public class TransactionServiceImpl implements TransactionService {
     private void handleDeposit(TransactionRequest transactionRequest, Transaction transaction) {
         Account account = accountRepo.findByAccountNumber(transactionRequest.getAccountNumber())
                 .orElseThrow(() -> new NotFoundException("Account Not Found"));
-
         User currentUser = userService.getCurrentLoggedInUser();
-        if (!account.getUser().getId().equals(currentUser.getId())) {
+
+        boolean isStaff = currentUser.getRoles()
+                .stream()
+                .anyMatch(role -> role.getName().equals("ADMIN") ||
+                        role.getName().equals("AUDITOR"));
+        if (!isStaff) {
             throw new BadRequestException("Account doesn't belong to authenticated user");
         }
 
